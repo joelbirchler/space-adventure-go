@@ -1,0 +1,15 @@
+body, html {
+    background-color: black;
+}
+
+.board, .background, .foreground {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 384;
+    height: 384;
+}
+
+.foreground {
+    z-index: 1000;
+}

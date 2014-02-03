@@ -1,0 +1,14 @@
+{
+  "name": "space-adventure-go",
+  "version": "0.0.0",
+  "description": "A space learning adventure",
+  "main": "game.js",
+  "scripts": {
+    "test": "nodeunit test/koala-iterators.js"
+  },
+  "author": "Joel Birchler",
+  "license": "GPLv3",
+  "devDependencies": {
+    "nodeunit": "0.8.x"
+  }
+}

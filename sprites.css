@@ -1,0 +1,13 @@
+.board span {
+    position: absolute;
+    display: block;
+    width: 32px;
+    height: 32px;
+    background-image: url(sprites/space-adventure-go.png);
+    overflow: hidden;
+}
+
+.board span.wall    { background-position-x: 0px;}
+.board span.floor   { background-position-x: -32px; }
+.board span.box     { background-position-x: -64px; }
+.board span.hero    { background-position-x: -96px; }

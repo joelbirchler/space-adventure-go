@@ -8,6 +8,10 @@ module.exports = {
 
     identity: function(test) {
         test.done();
+    },
+
+    not: function(test) {
+        test.done();
     }
 
 }

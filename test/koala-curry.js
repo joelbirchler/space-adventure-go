@@ -60,11 +60,19 @@ module.exports = {
     },
 
     partial: function(test) {
-        // use oOo.__ for blanks
+        var xyz = function(x, y, z) { 
+            return x + y + z; 
+        };
+
+        var part = oOo.partial(xyz, oOo.__, "b", oOo.__);
+        var result = part("a", "c");
+
+        test.equal(result, "abc");
         test.done();
     },
 
     testKoalaCurried1: function(test) {
+        test.ok(false);
         test.done();
     }
     

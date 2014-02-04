@@ -54,7 +54,7 @@ oOo.compose = function(/* funcs.. */) {
 oOo.curry = function(func, /* optional */ fullArgCount) {
     fullArgCount || (fullArgCount = func.length);
 
-    return function() {
+    return function(/* args */) {
         if (arguments.length < fullArgCount) {
             return oOo.curry(
                 func.bind.apply(func, [this].concat(oOo.toArray(arguments))),
@@ -63,6 +63,24 @@ oOo.curry = function(func, /* optional */ fullArgCount) {
         } else {
             return func.apply(this, arguments);
         }
+    };
+};
+
+oOo.__ = {};
+
+oOo.partial = function(func /*, variadic arguments */) {
+    if (arguments.length == 1) { return func; }
+
+    var partialArgs = Array.prototype.slice.call(arguments, 1);
+
+    return function(/* args */) {
+        var appliedArgs = oOo.toArray(arguments);
+        return func.apply(
+            this, 
+            partialArgs.map(function(arg, i) {
+                return (arg === oOo.__) ? appliedArgs.shift() : arg;
+            })
+        );
     };
 };
 

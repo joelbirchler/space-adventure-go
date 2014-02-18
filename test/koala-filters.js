@@ -1,11 +1,24 @@
 var oOo = require('../koala.js');
 
-var list = [1, 2, 3, 4, 5];
+var list = [1, 2, 3, 4, 5],
+    hashList = [{a: 42, b: 6, c: 3}, {a: 10, b: 7}, {a: 42, b: 2, c: 108}];
 
 module.exports = {
 
     select: function(test) {
         test.ok(oOo.select(oOo.isEven, [2, 4]));
+        test.done();
+    },
+
+    where: function(test) {
+        var found = oOo.where({a: 42}, hashList);
+        test.ok(found.length == 2);
+        test.ok(found[0].a == 42);
+        test.ok(found[0].b == 6);
+        test.ok(found[0].c == 3);
+        test.ok(found[1].a == 42);
+        test.ok(found[1].b == 2);
+        test.ok(found[1].c == 108);
         test.done();
     },
 

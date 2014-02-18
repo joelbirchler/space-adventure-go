@@ -4,7 +4,7 @@
   "description": "A space learning adventure",
   "main": "game.js",
   "scripts": {
-    "test": "nodeunit test/koala-curry.js"
+    "test": "nodeunit test/koala-filters.js"
   },
   "author": "Joel Birchler",
   "license": "GPLv3",

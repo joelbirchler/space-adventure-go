@@ -7,6 +7,7 @@ O   o o       O O   o       OoO   O   o O   o  O  O   o
 o   O `o     O' o   O       o  O  o   O o   O  o  o   O 
 `OoO'  `OoooO'  `OoO'       O   o `OoO' `OoO'o Oo `OoO */ 
 
+'use strict';
 
 var oOo = function(/* functions */) {  // <--- That's a koala.
     var funcs = arguments, 
@@ -26,10 +27,13 @@ var oOo = function(/* functions */) {  // <--- That's a koala.
 // Util
 //
 
-oOo.not = function(b) { return !b; }
+oOo.not = function(b) { return !b; };
 
-oOo.toArray = function(obj) { return Array.prototype.slice.call(obj); }
+oOo.toArray = function(obj) { return Array.prototype.slice.call(obj); };
 
+oOo.identity = function(n) {
+    return function() { return n; };
+}
 
 
 //
@@ -51,17 +55,17 @@ oOo.compose = function(/* funcs.. */) {
     };
 };
 
-oOo.curry = function(func, /* optional */ fullArgCount) {
-    fullArgCount || (fullArgCount = func.length);
+oOo.curry = function(func, /* optional */ arity) {
+    arity || (arity = func.length);
 
     return function(/* args */) {
-        if (arguments.length < fullArgCount) {
+        if (arguments.length < arity) {
             return oOo.curry(
                 func.bind.apply(func, [this].concat(oOo.toArray(arguments))),
-                fullArgCount - arguments.length
+                arity - arguments.length
             );
         } else {
-            return func.apply(this, arguments);
+            return func.apply(null, arguments);
         }
     };
 };
@@ -117,6 +121,21 @@ oOo.all = function(func, list) {
 
 
 //
+// Object Predicates
+//
+
+oOo.matches = function(matcher, matchee) {
+    if (matcher === matchee) { return true; }
+
+    for (var key in matcher) {
+        if (matcher[key] !== matchee[key]) { return false; }
+    }
+
+    return true;
+};
+
+
+//
 // Type Predicates
 //
 
@@ -129,6 +148,10 @@ oOo.isArray = Array.isArray;
 
 oOo.select = function(predicate, list) {
     return list.filter(predicate);
+};
+
+oOo.where = function(searchHash, list) {
+    return list.filter(oOo.matches.bind(null, searchHash));
 };
 
 oOo.reject = function(predicate, list) {

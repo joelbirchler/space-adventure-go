@@ -2,9 +2,7 @@
 // Sprint 1: Game Mechanics
 // ========================
 //
-// TODO: Add the hero and make him move
-// TODO: Deal with depths properly (this is probably a simple z-index=y*5000 + x in the Sprite render method)
-// TODO: Collision detection
+// TODO: Slide transition
 // TODO: Push boxes
 // TODO: Solving puzzles opens doors
 //
@@ -25,7 +23,11 @@ var Sprite = React.createClass({
     render: function() {
         return React.DOM.span({
             className: this.props.type,
-            style: { top: this.props.y * 32, left: this.props.x * 32 } 
+            style: { 
+                top: this.props.y * 32, 
+                left: this.props.x * 32,
+                zIndex: (this.props.y * 5000) + this.props.x
+            } 
         });
     }
 
@@ -70,6 +72,52 @@ var Board = React.createClass({
         return { floor: floor, walls: walls, boxes: boxes, hero: hero };
     },
 
+    collidesAt: function(x, y) {
+        return any(function(tile) {
+            return tile.x == x && tile.y == y;
+        }, concat(this.state.walls, this.state.boxes));
+    },
+
+    moveTo: function(x, y) {
+        var safe = !this.collidesAt(x, y);
+
+        if (safe) {
+            this.setState({ 
+                hero: merge(this.state.hero, {x: x, y: y}) 
+            });    
+        }
+
+        return safe;
+    },
+
+    moveToward: function(pixelX, pixelY) {
+        var hero = this.state.hero,
+            towards = {x: Math.floor(pixelX/32), y: Math.floor(pixelY/32)};
+
+        var newPos = map(
+            function(plane) {
+                var current = this.state.hero[plane];
+                if (towards[plane] < current) { return current - 1; }
+                else if (towards[plane] > current) { return current + 1; }
+                else { return current; }
+            }.bind(this), 
+            ['x', 'y']
+        );
+        
+        this.moveTo(newPos[0], newPos[1]);
+    },
+
+    onClick: function(event) {
+        if (!React.useTouch) {
+            this.moveToward(event.clientX, event.clientY);
+        }
+    },
+
+    onTouch: function(event) {
+        var touch = event.touches[0];
+        this.moveToward(touch.clientX, touch.clientY);
+    },
+
     render: function() {
         var state = this.state;
 
@@ -87,9 +135,16 @@ var Board = React.createClass({
             map(createSprite, concat(state.walls, state.boxes, state.hero))
         );
 
-        return React.DOM.div({className: 'board'}, [background, foreground]);
+        return React.DOM.div(
+            { className: 'board', onClick: this.onClick, onTouchStart: this.onTouch }, 
+            [background, foreground]
+        );
     }
 });
 
-React.initializeTouchEvents(true);
+if ('ontouchstart' in window || 'onmsgesturechange' in window) {
+    React.useTouch = true;
+    React.initializeTouchEvents(true);
+}
+
 React.renderComponent(Board(), document.body);

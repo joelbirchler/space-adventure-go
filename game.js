@@ -1,51 +1,93 @@
+//
+// Sprint 1: Game Mechanics
+// ========================
+//
+// TODO: Add the hero and make him move
+// TODO: Deal with depths properly (this is probably a simple z-index=y*5000 + x in the Sprite render method)
+// TODO: Collision detection
+// TODO: Push boxes
+// TODO: Solving puzzles opens doors
+//
+
+'use strict';
+
+oOo.importKoala(this);
+
+
 var Sprite = React.createClass({
-    getInitialState: function() {
-        return {x: 0, y: 0};
+
+    propTypes: {
+        type: React.PropTypes.string,
+        x: React.PropTypes.number,
+        y: React.PropTypes.number
     },
+
     render: function() {
         return React.DOM.span({
             className: this.props.type,
-            style: {top: x * 32, left: y * 32} 
+            style: { top: this.props.y * 32, left: this.props.x * 32 } 
         });
     }
+
 });
-
-Sprite.create = function(type) { 
-    return Sprite({type: type}); 
-};
-
-
-// TODO: Let's move all sprite data to be represented with coordinates (including in Background)
-// Background and Foreground can be same component. Move state to Game. -- Sincerely, Captain Obvious.
-
 
 
 
 var Board = React.createClass({
-    getInitialState: function() {
-        return {spriteMap: fill2d(12, 12, 'floor')}; // TODO: No state
-    },
-    render: function() {
-        var sprites = map2d(Sprite.create, this.state.spriteMap); 
-        return React.DOM.div({className: 'background'}, sprites);
-    }
-});
 
-var Game = React.createClass({
     getInitialState: function() {
+        var rectangle = function(type, x0, y0, x1, y1) {
+            // FIXME: This code is ugly
+            return flatten(
+                map(function(x) {
+                    return map(function(y) { 
+                            return {type: type, x: x, y: y}; 
+                        }, range(y0, y1));
+                    }, range(x0, x1)));
+        };
+
+        // background
+        var floor = rectangle('floor', 0, 0, 12, 12);
+
         // walls
-        var walls = _.flatten(_.map(_.range(12), function(n) { 
-            return [ {x: n, y: 0}, {x: n, y: 11}, {x: 0, y: n}, {x: 11, y: n} ];
-        }));
+        var walls = rectangle('wall', 0, 0, 12, 1)
+            .concat(rectangle('wall', 0, 11, 12, 12))
+            .concat(rectangle('wall', 0, 0, 1, 12))
+            .concat(rectangle('wall', 11, 0, 12, 12));
 
-        // box
+        // boxes
+        var boxes = [
+            {type: 'box', x: 3, y: 4},
+            {type: 'box', x: 3, y: 5},
+            {type: 'box', x: 5, y: 7},
+            {type: 'box', x: 6, y: 9},
+            {type: 'box', x: 9, y: 3}
+        ];
+
         // hero
+        var hero = {type: 'hero', x: 6, y:6};
 
-        return {walls: walls};
+        return { floor: floor, walls: walls, boxes: boxes, hero: hero };
     },
+
     render: function() {
-        var sprites = _.map(this.state.walls, Sprite.create.bind(Sprite, 'walls')); // FIXME: gahhh! create a func.js with map and other global functional functions
-        return React.DOM.div({className: 'foreground'}, sprites);
+        var state = this.state;
+
+        var createSprite = function(tile, i) { 
+            return Sprite(merge({key: i}, tile)); 
+        };
+
+        var background = React.DOM.div(
+            { key: 'background', className: 'layer layer-background' }, 
+            map(createSprite, state.floor)
+        );
+
+        var foreground = React.DOM.div(
+            { key: 'foreground', className: 'layer layer-foreground' }, 
+            map(createSprite, concat(state.walls, state.boxes, state.hero))
+        );
+
+        return React.DOM.div({className: 'board'}, [background, foreground]);
     }
 });
 

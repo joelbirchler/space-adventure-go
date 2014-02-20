@@ -61,7 +61,7 @@ oOo.curry = function(func, /* optional */ arity) {
     return function(/* args */) {
         if (arguments.length < arity) {
             return oOo.curry(
-                func.bind.apply(func, [this].concat(oOo.toArray(arguments))),
+                func.bind.apply(func, [oOo].concat(oOo.toArray(arguments))),
                 arity - arguments.length
             );
         } else {
@@ -213,6 +213,39 @@ oOo.merge = function(/* sources... */) {
     return target;
 };
 
+oOo.range = function(/* [start], stop, [step] */) {
+    var i = 0, 
+        stop, 
+        step = arguments[2] || 1;
+
+    if (arguments.length == 1) {
+        stop = arguments[0];
+    } else {
+        i = arguments[0];
+        stop = arguments[1];
+    }
+
+    var a = [];
+
+    for (; i < stop; i += step) { a.push(i); }
+
+    return a 
+};
+
+
+//
+// List Util
+//
+
+oOo.concat = function(a , b /* , more...  */) {
+    return a.concat.apply(a, oOo.tail(oOo.toArray(arguments)));
+};
+
+oOo.flatten = function(list) {
+    return list.reduce(concat);
+};
+
+
 
 //
 // Iterators
@@ -248,6 +281,14 @@ oOo.pluck = function(key, obj) {
 //
 // Export
 //
+
+oOo.importKoala = function(target) {
+    for (var key in oOo) {
+        if (key !== 'importKoala' && oOo.hasOwnProperty(key)) { 
+            target[key] = oOo[key];
+        }
+    }
+};
 
 if (typeof module !== 'undefined') {
     module.exports = oOo;

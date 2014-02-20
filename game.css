@@ -2,7 +2,7 @@ body, html {
     background-color: black;
 }
 
-.board, .background, .foreground {
+.board, .layer {
     position: absolute;
     top: 0;
     left: 0;
@@ -10,6 +10,10 @@ body, html {
     height: 384;
 }
 
-.foreground {
-    z-index: 1000;
+.layer-background {
+    z-index: 2000;
+}
+
+.layer-foreground {
+    z-index: 4000;
 }

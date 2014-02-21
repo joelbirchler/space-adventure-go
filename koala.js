@@ -88,6 +88,21 @@ oOo.partial = function(func /*, variadic arguments */) {
     };
 };
 
+oOo.throttle = function(func, delay) { 
+    var last, timeout;
+
+    return function () {
+        var context = this,
+            now = new Date().getTime(),
+            args = arguments;
+
+        if (!last || now >= last + delay) {
+            last = now;
+            func.apply(context, args);
+        }
+    };
+};
+
 
 
 //

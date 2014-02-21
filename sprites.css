@@ -11,4 +11,4 @@
 .board span.wall    { background-position-x: 0px;}
 .board span.floor   { background-position-x: -32px; }
 .board span.box     { background-position-x: -64px; }
-.board span.hero    { background-position-x: -96px; }
+.board span.hero    { background-position-x: -96px; transition: 0.2s; }

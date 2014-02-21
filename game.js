@@ -2,8 +2,13 @@
 // Sprint 1: Game Mechanics
 // ========================
 //
-// TODO: Slide transition
 // TODO: Hold down to keep moving
+//   * On mousemove we need to save the mouse x/y
+//   * On mousedown, update the saved mouse x/y and start polling moveToward (200-250ms?)
+//   * On mouseup, stop polling
+//   * Consider moving to a mixin
+//   * Touch events
+// 
 // TODO: Push boxes
 // TODO: Solving puzzles opens doors
 //
@@ -108,7 +113,7 @@ var Board = React.createClass({
         this.moveTo(newPos[0], newPos[1]);
     },
 
-    onClick: function(event) {
+    onMouseDown: function(event) {
         if (!React.useTouch) {
             this.moveToward(event.clientX, event.clientY);
         }
@@ -137,7 +142,7 @@ var Board = React.createClass({
         );
 
         return React.DOM.div(
-            { className: 'board', onClick: this.onClick, onTouchStart: this.onTouch }, 
+            { className: 'board', onMouseDown: this.onMouseDown, onTouchStart: this.onTouch }, 
             [background, foreground]
         );
     }

@@ -4,7 +4,7 @@
     width: 32px;
     height: 48px;
     margin-top: -16px;
-    background-image: url(sprites/space-adventure-go.png);
+    background-image: url(../sprites/space-adventure-go.png);
     overflow: hidden;
     transition: 0.2s; 
 }

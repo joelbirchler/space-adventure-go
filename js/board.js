@@ -1,46 +1,3 @@
-//
-// Sprint 1: Game Mechanics
-// ========================
-//
-// TODO: Solving puzzles opens doors
-//
-//
-// Sprint 2: Mobile
-// ================
-// TODO: 3D transforms to leverage GPU
-// TODO: Appropriate scaling
-// TODO: https://cordova.apache.org/
-//
-//
-
-'use strict';
-
-oOo.importKoala(this);
-
-
-var Sprite = React.createClass({
-
-    propTypes: {
-        type: React.PropTypes.string,
-        x: React.PropTypes.number,
-        y: React.PropTypes.number
-    },
-
-    render: function() {
-        return React.DOM.span({
-            className: this.props.type,
-            style: { 
-                top: this.props.y * 32, 
-                left: this.props.x * 32,
-                zIndex: (this.props.y * 5000) + this.props.x
-            } 
-        });
-    }
-
-});
-
-
-
 var Board = React.createClass({
 
     getInitialState: function() {
@@ -161,10 +118,3 @@ var Board = React.createClass({
         );
     }
 });
-
-if ('ontouchstart' in window || 'onmsgesturechange' in window) {
-    React.useTouch = true;
-    React.initializeTouchEvents(true);
-}
-
-React.renderComponent(Board(), document.body);

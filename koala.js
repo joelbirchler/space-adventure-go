@@ -135,6 +135,7 @@ oOo.all = function(func, list) {
 };
 
 
+
 //
 // Object Predicates
 //
@@ -258,6 +259,20 @@ oOo.concat = function(a , b /* , more...  */) {
 
 oOo.flatten = function(list) {
     return list.reduce(concat);
+};
+
+oOo.find = function(func, list) {
+    var found;
+
+    list.some(function(item) {
+        if (func(item, list)) { 
+            found = item; 
+            return true;
+        }
+        return false;
+    });
+
+    return found;
 };
 
 

@@ -8,7 +8,9 @@
 //
 // Sprint 2: Mobile
 // ================
-//
+// TODO: 3D transforms to leverage GPU
+// TODO: Appropriate scaling
+// TODO: https://cordova.apache.org/
 //
 
 'use strict';
@@ -76,39 +78,44 @@ var Board = React.createClass({
         return { floor: floor, walls: walls, boxes: boxes, hero: hero };
     },
 
-    collidesAt: function(x, y) {
-        return any(function(tile) {
+    findAt: function(x, y) {
+        return find(function(tile) {
             return tile.x == x && tile.y == y;
         }, concat(this.state.walls, this.state.boxes));
     },
 
-    moveTo: function(x, y) {
-        var safe = !this.collidesAt(x, y);
+    move: function(deltaX, deltaY) {
+        var hero = this.state.hero,
+            futureSpace = this.findAt(hero.x + deltaX, hero.y + deltaY);
 
-        if (safe) {
+        if (!futureSpace) {
             this.setState({ 
-                hero: merge(this.state.hero, {x: x, y: y}) 
+                hero: merge(this.state.hero, {x: hero.x + deltaX, y: hero.y + deltaY}) 
             });    
         }
-
-        return safe;
     },
 
     moveToward: function(pixelX, pixelY) {
         var hero = this.state.hero,
-            towards = {x: Math.floor(pixelX/32), y: Math.floor(pixelY/32)};
+            towards = {x: Math.floor(pixelX/32), y: Math.floor(pixelY/32)},
+            delta = {x: 0, y: 0},
+            plane = ['x', 'y'];
 
-        var newPos = map(
-            function(plane) {
-                var current = this.state.hero[plane];
-                if (towards[plane] < current) { return current - 1; }
-                else if (towards[plane] > current) { return current + 1; }
-                else { return current; }
-            }.bind(this), 
-            ['x', 'y']
-        );
+        // swap plan ordering for diagonal stepping when tapping on same tile
+        if (this.moveWiggler) { plane = ['y', 'x']; }
+        this.moveWiggler = !this.moveWiggler;
+
+        if (towards[plane[0]] < hero[plane[0]]) {
+            delta[plane[0]] = -1;
+        } else if (towards[plane[0]] > hero[plane[0]]) {
+            delta[plane[0]] = 1;
+        } else if (towards[plane[1]] < hero[plane[1]]) {
+            delta[plane[1]] = -1;
+        } else if (towards[plane[1]] > hero[plane[1]]) {
+            delta[plane[1]] = 1;
+        }
         
-        this.moveTo(newPos[0], newPos[1]);
+        this.move(delta.x, delta.y);
     },
 
     onMouseDown: function(event) {

@@ -2,7 +2,6 @@
 // Sprint 1: Game Mechanics
 // ========================
 //
-// TODO: Push boxes
 // TODO: Solving puzzles opens doors
 //
 //
@@ -11,6 +10,7 @@
 // TODO: 3D transforms to leverage GPU
 // TODO: Appropriate scaling
 // TODO: https://cordova.apache.org/
+//
 //
 
 'use strict';
@@ -65,11 +65,11 @@ var Board = React.createClass({
 
         // boxes
         var boxes = [
-            {type: 'box', x: 3, y: 4},
-            {type: 'box', x: 3, y: 5},
-            {type: 'box', x: 5, y: 7},
-            {type: 'box', x: 6, y: 9},
-            {type: 'box', x: 9, y: 3}
+            {type: 'box', x: 3, y: 4, key: 'box-0'},
+            {type: 'box', x: 3, y: 5, key: 'box-1'},
+            {type: 'box', x: 5, y: 7, key: 'box-2'},
+            {type: 'box', x: 6, y: 9, key: 'box-3'},
+            {type: 'box', x: 9, y: 3, key: 'box-4'}
         ];
 
         // hero
@@ -86,12 +86,21 @@ var Board = React.createClass({
 
     move: function(deltaX, deltaY) {
         var hero = this.state.hero,
-            futureSpace = this.findAt(hero.x + deltaX, hero.y + deltaY);
+            future = {x: hero.x + deltaX, y: hero.y + deltaY},
+            futureTile = this.findAt(future.x, future.y);
 
-        if (!futureSpace) {
+        if (!futureTile) { // empty tile, simple move
             this.setState({ 
-                hero: merge(this.state.hero, {x: hero.x + deltaX, y: hero.y + deltaY}) 
+                hero: merge(this.state.hero, {x: future.x, y: future.y}) 
             });    
+        } else if (futureTile.type == 'box') { // box tile, attempt a slide
+            var boxFuture = {x: futureTile.x + deltaX, y: futureTile.y + deltaY};
+            if (!this.findAt(boxFuture.x, boxFuture.y)) {
+                this.setState({ 
+                    boxes: concat([merge(futureTile, boxFuture)], without(futureTile, this.state.boxes)),
+                    hero: merge(this.state.hero, {x: future.x, y: future.y}) 
+                });
+            }
         }
     },
 
@@ -133,7 +142,7 @@ var Board = React.createClass({
         var state = this.state;
 
         var createSprite = function(tile, i) { 
-            return Sprite(merge({key: i}, tile)); 
+            return Sprite(merge({key: tile.key || i}, tile)); 
         };
 
         var background = React.DOM.div(

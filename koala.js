@@ -174,6 +174,10 @@ oOo.reject = function(predicate, list) {
     return list.filter( oOo.compose(oOo.not, predicate) );
 };
 
+oOo.without = function(item, list) {
+    return oOo.reject(function(o) { return o === item; }, list)
+};
+
 oOo.head = function(list) {
     return list[0];
 };

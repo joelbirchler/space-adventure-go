@@ -22,11 +22,11 @@ var Board = React.createClass({
 
         // boxes
         var boxes = [
-            {type: 'box', x: 3, y: 4, key: 'box-0'},
-            {type: 'box', x: 3, y: 5, key: 'box-1'},
-            {type: 'box', x: 5, y: 7, key: 'box-2'},
-            {type: 'box', x: 6, y: 9, key: 'box-3'},
-            {type: 'box', x: 9, y: 3, key: 'box-4'}
+            {type: 'box', x: 3, y: 4, key: 'box-0', value: 'F'},
+            {type: 'box', x: 3, y: 5, key: 'box-1', value: 'I'},
+            {type: 'box', x: 5, y: 7, key: 'box-2', value: 'O'},
+            {type: 'box', x: 6, y: 9, key: 'box-3', value: 'N'},
+            {type: 'box', x: 9, y: 3, key: 'box-4', value: 'A'}
         ];
 
         // hero

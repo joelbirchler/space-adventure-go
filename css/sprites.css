@@ -3,10 +3,14 @@
     display: block;
     width: 32px;
     height: 48px;
+    line-height: 32px;
+    font-size: 22px;
+    text-align: center;
     margin-top: -16px;
+    color: #e7c7b6;
     background-image: url(../sprites/space-adventure-go.png);
     overflow: hidden;
-    transition: 0.2s; 
+    transition: 0.2s;
 }
 
 .board span.wall    { background-position-x: 0px;}

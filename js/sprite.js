@@ -14,7 +14,7 @@ var Sprite = React.createClass({
                 left: this.props.x * 32,
                 zIndex: (this.props.y * 5000) + this.props.x
             } 
-        });
+        }, this.props.value);
     }
 
 });

@@ -1,6 +1,6 @@
 Iteration 1: Game Mechanics
 ===========================
-TODO: Boxes with letters
+TODO: Arrow keys
 TODO: String together (anywhere) triggers win
 
 

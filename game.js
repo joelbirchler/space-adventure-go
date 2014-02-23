@@ -2,15 +2,13 @@
 // Sprint 1: Game Mechanics
 // ========================
 //
-// TODO: Hold down to keep moving
-//   * On mousemove we need to save the mouse x/y
-//   * On mousedown, update the saved mouse x/y and start polling moveToward (200-250ms?)
-//   * On mouseup, stop polling
-//   * Consider moving to a mixin
-//   * Touch events
-// 
 // TODO: Push boxes
 // TODO: Solving puzzles opens doors
+//
+//
+// Sprint 2: Mobile
+// ================
+//
 //
 
 'use strict';

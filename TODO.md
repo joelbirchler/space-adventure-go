@@ -13,7 +13,9 @@ TODO: https://cordova.apache.org/
 
 Iteration 3: Art
 ================
-...
+TODO: Create sprites
+TODO: Implement
+TODO: Animation
 
 
 Iteration 4: Full Mechanics
@@ -21,6 +23,7 @@ Iteration 4: Full Mechanics
 TODO: Stuck boxes as part of the puzzle
 TODO: Solving puzzles opens doors
 ...
+
 
 Iteration x: Game Saving / Screens / Polish
 Iteration x: Sound

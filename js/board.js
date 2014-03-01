@@ -5,8 +5,8 @@ var Board = React.createClass({
             // FIXME: This code is ugly
             return flatten(
                 map(function(x) {
-                    return map(function(y) { 
-                            return {type: type, x: x, y: y}; 
+                    return map(function(y) {
+                            return {type: type, x: x, y: y};
                         }, range(y0, y1));
                     }, range(x0, x1)));
         };
@@ -22,11 +22,9 @@ var Board = React.createClass({
 
         // boxes
         var boxes = [
-            {type: 'box', x: 3, y: 4, key: 'box-0', value: 'F'},
-            {type: 'box', x: 3, y: 5, key: 'box-1', value: 'I'},
-            {type: 'box', x: 5, y: 7, key: 'box-2', value: 'O'},
-            {type: 'box', x: 6, y: 9, key: 'box-3', value: 'N'},
-            {type: 'box', x: 9, y: 3, key: 'box-4', value: 'A'}
+            {type: 'box', x: 3, y: 4, key: 'box-0', value: 'O'},
+            {type: 'box', x: 3, y: 5, key: 'box-1', value: 'B'},
+            {type: 'box', x: 5, y: 7, key: 'box-2', value: 'I'}
         ];
 
         // hero
@@ -41,22 +39,69 @@ var Board = React.createClass({
         }, concat(this.state.walls, this.state.boxes));
     },
 
+    isValidAnswer: function(answer) {
+        console.log("isValidAnswer", answer);
+        return answer.join('') === 'OBI';
+    },
+
+    checkWin: function(boxes) {
+        var previousBox, minX, maxX, boxXMap = {};
+
+        // FIXME: Refactor with less optimizations for now
+
+        // We are going to have some minor internal side-effects here for efficiency. Our firstPass() sets minX
+        // and maxX (used to quickly determine if we have a connected chain) and boxXMap (used to create an ordered
+        // list of box values).
+        var firstPass = function(box) {
+            if (!previousBox) {
+                minX = maxX = box.x;
+            } else if (box.y != previousBox.y) {
+                return false;
+            } else if (box.x < minX) {
+                minX = box.x;
+            } else if (box.x > maxX) {
+                maxX = box.x;
+            }
+
+            boxXMap[box.x] = box;
+
+            previousBox = box;
+            return true;
+        };
+
+        var isConnected = function() {
+            return (1 + maxX - minX === boxes.length);
+        };
+
+        var orderedValues = function() {
+            var values = [];
+            for (var x = minX; x <= maxX; x++) { values.push(boxXMap[x].value); }
+            return values;
+        };
+
+        return all(firstPass, boxes) && isConnected() && this.isValidAnswer(orderedValues());
+    },
+
     move: function(deltaX, deltaY) {
         var hero = this.state.hero,
             future = {x: hero.x + deltaX, y: hero.y + deltaY},
             futureTile = this.findAt(future.x, future.y);
 
         if (!futureTile) { // empty tile, simple move
-            this.setState({ 
-                hero: merge(this.state.hero, {x: future.x, y: future.y}) 
-            });    
+            this.setState({
+                hero: merge(this.state.hero, {x: future.x, y: future.y})
+            });
         } else if (futureTile.type == 'box') { // box tile, attempt a slide
             var boxFuture = {x: futureTile.x + deltaX, y: futureTile.y + deltaY};
             if (!this.findAt(boxFuture.x, boxFuture.y)) {
-                this.setState({ 
-                    boxes: concat([merge(futureTile, boxFuture)], without(futureTile, this.state.boxes)),
-                    hero: merge(this.state.hero, {x: future.x, y: future.y}) 
+                var updatedBoxes = concat([merge(futureTile, boxFuture)], without(futureTile, this.state.boxes))
+
+                this.setState({
+                    boxes: updatedBoxes,
+                    hero: merge(this.state.hero, {x: future.x, y: future.y})
                 });
+
+                if (this.checkWin(updatedBoxes)) { console.log('WIN!'); }
             }
         }
     },
@@ -80,7 +125,7 @@ var Board = React.createClass({
         } else if (towards[plane[1]] > hero[plane[1]]) {
             delta[plane[1]] = 1;
         }
-        
+
         this.move(delta.x, delta.y);
     },
 
@@ -98,22 +143,22 @@ var Board = React.createClass({
     render: function() {
         var state = this.state;
 
-        var createSprite = function(tile, i) { 
-            return Sprite(merge({key: tile.key || i}, tile)); 
+        var createSprite = function(tile, i) {
+            return Sprite(merge({key: tile.key || i}, tile));
         };
 
         var background = React.DOM.div(
-            { key: 'background', className: 'layer layer-background' }, 
+            { key: 'background', className: 'layer layer-background' },
             map(createSprite, state.floor)
         );
 
         var foreground = React.DOM.div(
-            { key: 'foreground', className: 'layer layer-foreground' }, 
+            { key: 'foreground', className: 'layer layer-foreground' },
             map(createSprite, concat(state.walls, state.boxes, state.hero))
         );
 
         return React.DOM.div(
-            { className: 'board', onMouseDown: this.onMouseDown, onTouchStart: this.onTouch }, 
+            { className: 'board', onMouseDown: this.onMouseDown, onTouchStart: this.onTouch },
             [background, foreground]
         );
     }

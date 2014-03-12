@@ -1,15 +1,16 @@
 Iteration 1: Game Mechanics
 ===========================
 TODO: String together (anywhere) triggers win -- make a moveBox method that calls a check method after moving
-TODO: Make a game component that holds the board and handles input events
-FIXME: Diagonal moves are not intuitive
+TODO: Make a game *component* that holds the board and handles input events
 
 
 Iteration 2: Mobile
 ===================
+TODO: https://cordova.apache.org/
+TODO: Swipe to move
 TODO: 3D transforms to leverage GPU
 TODO: Appropriate scaling
-TODO: https://cordova.apache.org/
+
 
 
 Iteration 3: Art

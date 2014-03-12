@@ -45,41 +45,11 @@ var Board = React.createClass({
     },
 
     checkWin: function(boxes) {
-        var previousBox, minX, maxX, boxXMap = {};
+        // FIXME: Refactor with less optimizations for now. In theory we can do something like:
+        // pluck y && check horizontal, pluck x, (max - min) should be length
+        //
 
-        // FIXME: Refactor with less optimizations for now
-
-        // We are going to have some minor internal side-effects here for efficiency. Our firstPass() sets minX
-        // and maxX (used to quickly determine if we have a connected chain) and boxXMap (used to create an ordered
-        // list of box values).
-        var firstPass = function(box) {
-            if (!previousBox) {
-                minX = maxX = box.x;
-            } else if (box.y != previousBox.y) {
-                return false;
-            } else if (box.x < minX) {
-                minX = box.x;
-            } else if (box.x > maxX) {
-                maxX = box.x;
-            }
-
-            boxXMap[box.x] = box;
-
-            previousBox = box;
-            return true;
-        };
-
-        var isConnected = function() {
-            return (1 + maxX - minX === boxes.length);
-        };
-
-        var orderedValues = function() {
-            var values = [];
-            for (var x = minX; x <= maxX; x++) { values.push(boxXMap[x].value); }
-            return values;
-        };
-
-        return all(firstPass, boxes) && isConnected() && this.isValidAnswer(orderedValues());
+        return false; //&& this.isValidAnswer(orderedValues());
     },
 
     move: function(deltaX, deltaY) {
@@ -106,38 +76,29 @@ var Board = React.createClass({
         }
     },
 
-    moveToward: function(pixelX, pixelY) {
-        var hero = this.state.hero,
-            towards = {x: Math.floor(pixelX/32), y: Math.floor(pixelY/32)},
-            delta = {x: 0, y: 0},
-            plane = ['x', 'y'];
-
-        // swap plan ordering for diagonal stepping when tapping on same tile
-        if (this.moveWiggler) { plane = ['y', 'x']; }
-        this.moveWiggler = !this.moveWiggler;
-
-        if (towards[plane[0]] < hero[plane[0]]) {
-            delta[plane[0]] = -1;
-        } else if (towards[plane[0]] > hero[plane[0]]) {
-            delta[plane[0]] = 1;
-        } else if (towards[plane[1]] < hero[plane[1]]) {
-            delta[plane[1]] = -1;
-        } else if (towards[plane[1]] > hero[plane[1]]) {
-            delta[plane[1]] = 1;
-        }
-
-        this.move(delta.x, delta.y);
-    },
-
-    onMouseDown: function(event) {
-        if (!React.useTouch) {
-            this.moveToward(event.clientX, event.clientY);
-        }
-    },
-
     onTouch: function(event) {
         var touch = event.touches[0];
-        this.moveToward(touch.clientX, touch.clientY);
+        // TODO: swipe
+    },
+
+    onKey: function(event) {
+        var keyMap = {
+            "Up": [0, -1],
+            "Down": [0, 1],
+            "Left": [-1, 0],
+            "Right": [1, 0]
+        };
+
+        var deltas = keyMap[event.keyIdentifier];
+        if (deltas) { this.move.apply(this, deltas); }
+    },
+
+    componentDidMount: function() {
+        window.addEventListener('keydown', this.onKey);
+    },
+
+    componentWillUnmount: function() {
+        window.removeEventListener('keydown', this.onKey);
     },
 
     render: function() {
@@ -158,7 +119,7 @@ var Board = React.createClass({
         );
 
         return React.DOM.div(
-            { className: 'board', onMouseDown: this.onMouseDown, onTouchStart: this.onTouch },
+            { className: 'board', onTouchStart: this.onTouch },
             [background, foreground]
         );
     }

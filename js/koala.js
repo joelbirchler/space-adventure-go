@@ -1,16 +1,16 @@
-       /*OOOo.              o                   o       
-      .O     o.             O                  O        
-      O       o             o                  o        
-      o       O             o                  O        
+       /*OOOo.              o                   o
+      .O     o.             O                  O
+      O       o             o                  o
+      o       O             o                  O
 .oOo. O       o .oOo.       O  o  .oOo. .oOoO' o  .oOoO'
-O   o o       O O   o       OoO   O   o O   o  O  O   o 
-o   O `o     O' o   O       o  O  o   O o   O  o  o   O 
-`OoO'  `OoooO'  `OoO'       O   o `OoO' `OoO'o Oo `OoO */ 
+O   o o       O O   o       OoO   O   o O   o  O  O   o
+o   O `o     O' o   O       o  O  o   O o   O  o  o   O
+`OoO'  `OoooO'  `OoO'       O   o `OoO' `OoO'o Oo `OoO */
 
 'use strict';
 
 var oOo = function(/* functions */) {  // <--- That's a koala.
-    var funcs = arguments, 
+    var funcs = arguments,
         count = funcs.length;
 
     return function() {
@@ -43,7 +43,7 @@ oOo.identity = function(n) {
 oOo.sequence = oOo;
 
 oOo.compose = function(/* funcs.. */) {
-    var funcs = arguments, 
+    var funcs = arguments,
         count = funcs.length;
 
     return function() {
@@ -80,7 +80,7 @@ oOo.partial = function(func /*, variadic arguments */) {
     return function(/* args */) {
         var appliedArgs = oOo.toArray(arguments);
         return func.apply(
-            this, 
+            this,
             partialArgs.map(function(arg, i) {
                 return (arg === oOo.__) ? appliedArgs.shift() : arg;
             })
@@ -88,7 +88,7 @@ oOo.partial = function(func /*, variadic arguments */) {
     };
 };
 
-oOo.throttle = function(func, delay) { 
+oOo.throttle = function(func, delay) {
     var last, timeout;
 
     return function () {
@@ -109,12 +109,12 @@ oOo.throttle = function(func, delay) {
 // Number Predicates
 //
 
-oOo.isEven = function(n) { 
-    return n % 2 == 0; 
+oOo.isEven = function(n) {
+    return n % 2 == 0;
 };
 
-oOo.isOdd = function(n) { 
-    return !isEven(n); 
+oOo.isOdd = function(n) {
+    return !isEven(n);
 };
 
 
@@ -213,13 +213,13 @@ oOo.keys = function(obj) {
 };
 
 oOo.values = function(obj) {
-    return Object.keys(obj).map(function(key) { 
-        return obj[key]; 
+    return Object.keys(obj).map(function(key) {
+        return obj[key];
     });
 };
 
 oOo.merge = function(/* sources... */) {
-    var target = {}, 
+    var target = {},
         sources = Array.prototype.slice.call(arguments, 0);
 
     sources.forEach(function(source) {
@@ -234,8 +234,8 @@ oOo.merge = function(/* sources... */) {
 };
 
 oOo.range = function(/* [start], stop, [step] */) {
-    var i = 0, 
-        stop, 
+    var i = 0,
+        stop,
         step = arguments[2] || 1;
 
     if (arguments.length == 1) {
@@ -249,7 +249,7 @@ oOo.range = function(/* [start], stop, [step] */) {
 
     for (; i < stop; i += step) { a.push(i); }
 
-    return a 
+    return a
 };
 
 
@@ -269,8 +269,8 @@ oOo.find = function(func, list) {
     var found;
 
     list.some(function(item) {
-        if (func(item, list)) { 
-            found = item; 
+        if (func(item, list)) {
+            found = item;
             return true;
         }
         return false;
@@ -302,7 +302,7 @@ oOo.reduceRight = function(iterator, initial, obj) {
 };
 
 oOo.times = function(iterator, count, context) {
-    for (var i = 0; i < count; i++) { 
+    for (var i = 0; i < count; i++) {
         iterator.call(context, i);
     }
 };
@@ -318,7 +318,7 @@ oOo.pluck = function(key, obj) {
 
 oOo.importKoala = function(target) {
     for (var key in oOo) {
-        if (key !== 'importKoala' && oOo.hasOwnProperty(key)) { 
+        if (key !== 'importKoala' && oOo.hasOwnProperty(key)) {
             target[key] = oOo[key];
         }
     }

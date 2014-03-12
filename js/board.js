@@ -40,16 +40,21 @@ var Board = React.createClass({
     },
 
     isValidAnswer: function(answer) {
-        console.log("isValidAnswer", answer);
         return answer.join('') === 'OBI';
     },
 
     checkWin: function(boxes) {
-        // FIXME: Refactor with less optimizations for now. In theory we can do something like:
-        // pluck y && check horizontal, pluck x, (max - min) should be length
-        //
+        // return immediately if all of the boxes aren't align on the same y
+        if (unique( pluck('y', boxes) ).length !== 1) { return false; }
 
-        return false; //&& this.isValidAnswer(orderedValues());
+        boxes.sort(function(a, b) {
+            return a.x - b.x;
+        });
+
+        // return immediately if the boxes are not tight horizontally
+        if (boxes[boxes.length-1].x - boxes[0].x + 1 !== boxes.length) { return false; }
+
+        return this.isValidAnswer(pluck('value', boxes));
     },
 
     move: function(deltaX, deltaY) {

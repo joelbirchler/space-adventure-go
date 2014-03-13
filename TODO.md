@@ -7,7 +7,8 @@ TODO: Animation
 
 Iteration 3: Mobile
 ===================
-TODO: https://cordova.apache.org/
+TODO: cordova package add android
+TODO: Landscape mode
 TODO: Swipe to move
 TODO: 3D transforms to leverage GPU
 TODO: Appropriate scaling
@@ -32,7 +33,7 @@ Level Format?
 
 "XXXOXXXX" +
 "X......X" +
-"X.2..=.X" +
-"X..+53.X" +
+"X.c....X" +
+"X..at..X" +
 "X......X" +
 "XXXXXXXX";

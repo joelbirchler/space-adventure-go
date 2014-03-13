@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.joelbirchler.spaceadventurego" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>SpaceAdventureGo</name>
+    <description>
+        A spelling and math sliding box puzzle adventure.
+    </description>
+    <author email="joel@joelbirchler.com" href="http://joelbirchler.com">
+        Joel Birchler
+    </author>
+    <content src="index.html" />
+    <access origin="*" />
+    <preference name="Fullscreen" value="true" />
+    <preference name="Orientation" value="landscape" />
+    <preference name="DisallowOverscroll" value="true"/>
+</widget>

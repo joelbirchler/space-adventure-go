@@ -1,3 +1,5 @@
+platforms/*
+
 lib-cov
 *.seed
 *.log
